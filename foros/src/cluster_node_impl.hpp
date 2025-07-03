@@ -24,6 +24,7 @@
 #include <rclcpp/node_interfaces/node_logging_interface.hpp>
 #include <rclcpp/node_interfaces/node_services_interface.hpp>
 #include <rclcpp/node_interfaces/node_timers_interface.hpp>
+#include "rclcpp/node_interfaces/node_parameters_interface.hpp"
 #include <rclcpp/node_options.hpp>
 
 #include <functional>

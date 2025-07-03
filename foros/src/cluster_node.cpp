@@ -56,7 +56,7 @@ ClusterNode::ClusterNode(const std::string &cluster_name,
           options.use_intra_process_comms(),
           options.enable_topic_statistics())),
       node_graph_(new rclcpp::node_interfaces::NodeGraph(node_base_.get())),
-      node_logging_(new rclcpp::node_interfaces::NodeLogging(node_base_.get())),
+      node_logging_(new rclcpp::node_interfaces::NodeLogging(node_base_)),
       node_timers_(new rclcpp::node_interfaces::NodeTimers(node_base_.get())),
       node_topics_(new rclcpp::node_interfaces::NodeTopics(node_base_.get(),
                                                            node_timers_.get())),
@@ -64,7 +64,7 @@ ClusterNode::ClusterNode(const std::string &cluster_name,
           new rclcpp::node_interfaces::NodeServices(node_base_.get())),
       node_clock_(new rclcpp::node_interfaces::NodeClock(
           node_base_, node_topics_, node_graph_, node_services_,
-          node_logging_)),
+          node_logging_, RCL_ROS_TIME)),
       node_parameters_(new rclcpp::node_interfaces::NodeParameters(
           node_base_, node_logging_, node_topics_, node_services_, node_clock_,
           options.parameter_overrides(), options.start_parameter_services(),
@@ -208,7 +208,7 @@ rcl_interfaces::msg::ListParametersResult ClusterNode::list_parameters(
 
 ClusterNode::OnSetParametersCallbackHandle::SharedPtr
 ClusterNode::add_on_set_parameters_callback(
-    OnParametersSetCallbackType callback) {
+    OnSetParametersCallbackType callback) {
   return node_parameters_->add_on_set_parameters_callback(callback);
 }
 

@@ -86,7 +86,7 @@ void ContextStore::init_current_term() {
   auto status = db_->Get(leveldb::ReadOptions(), kCurrentTermKey, &value);
 
   if (status.ok() == false) {
-    if (!status.NotFound) {
+    if (!status.IsNotFound()) {
       RCLCPP_ERROR(logger_, "current_term get failed: %s",
                    status.ToString().c_str());
     }
@@ -133,7 +133,7 @@ void ContextStore::init_voted_for() {
   auto status = db_->Get(leveldb::ReadOptions(), kVotedForKey, &value);
 
   if (status.ok() == false) {
-    if (!status.NotFound) {
+    if (!status.IsNotFound()) {
       RCLCPP_ERROR(logger_, "voted_for get failed: %s",
                    status.ToString().c_str());
     }
@@ -178,7 +178,7 @@ void ContextStore::init_voted() {
   auto status = db_->Get(leveldb::ReadOptions(), kVotedKey, &value);
 
   if (status.ok() == false) {
-    if (!status.NotFound) {
+    if (!status.IsNotFound()) {
       RCLCPP_ERROR(logger_, "voted get failed: %s", status.ToString().c_str());
     }
     voted_ = false;
@@ -245,7 +245,7 @@ uint64_t ContextStore::load_logs_size() {
   auto status = db_->Get(leveldb::ReadOptions(), kLogSizeKey, &value);
 
   if (status.ok() == false) {
-    if (!status.NotFound) {
+    if (!status.IsNotFound()) {
       RCLCPP_ERROR(logger_, "logs size get failed: %s",
                    status.ToString().c_str());
     }
@@ -302,7 +302,7 @@ LogEntry::SharedPtr ContextStore::load_log(const uint64_t id) {
   auto status = db_->Get(leveldb::ReadOptions(), get_log_term_key(id), &value);
 
   if (status.ok() == false) {
-    if (!status.NotFound) {
+    if (!status.IsNotFound()) {
       RCLCPP_ERROR(logger_, "log term for %lu get failed: %s", id,
                    status.ToString().c_str());
     }

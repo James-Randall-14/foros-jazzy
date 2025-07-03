@@ -15,7 +15,7 @@
  */
 
 #include "common/node_util.hpp"
-
+#include <cstdint>
 #include <string>
 
 namespace akit {
