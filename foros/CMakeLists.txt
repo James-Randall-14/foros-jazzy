@@ -13,6 +13,8 @@ find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(foros_msgs REQUIRED)
 find_package(leveldb REQUIRED)
+find_package(Python3 COMPONENTS Interpreter Development REQUIRED)
+find_package(pybind11 REQUIRED)
 
 include_directories(src)
 
@@ -51,6 +53,19 @@ ament_target_dependencies(${PROJECT_NAME}
   leveldb
 )
 
+pybind11_add_module(cluster_node_py
+  python_bindings/cluster_node_py.cpp
+)
+
+target_include_directories(cluster_node_py
+  PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}/include
+)
+
+target_link_libraries(cluster_node_py
+  PRIVATE ${PROJECT_NAME}
+)
+
 # why shoud I put it as well?? need to check
 target_link_libraries(${PROJECT_NAME} leveldb)
 
@@ -65,10 +80,16 @@ install(
 )
 
 install(
-  TARGETS ${PROJECT_NAME} EXPORT ${PROJECT_NAME}
+  TARGETS ${PROJECT_NAME}
+  EXPORT ${PROJECT_NAME}
   ARCHIVE DESTINATION lib
   LIBRARY DESTINATION lib
   RUNTIME DESTINATION bin
+)
+
+install(
+  TARGETS cluster_node_py
+  LIBRARY DESTINATION lib/${PROJECT_NAME}/python3.${Python3_VERSION_MAJOR}
 )
 
 if(BUILD_TESTING)
