@@ -11,6 +11,8 @@ endif()
 
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
+find_package(std_msgs REQUIRED)
+find_package(std_srvs REQUIRED)
 find_package(foros_msgs REQUIRED)
 find_package(leveldb REQUIRED)
 find_package(Python3 COMPONENTS Interpreter Development REQUIRED)
@@ -50,6 +52,8 @@ target_include_directories(${PROJECT_NAME}
 ament_target_dependencies(${PROJECT_NAME}
   rclcpp
   foros_msgs
+  std_msgs
+  std_srvs
   leveldb
 )
 
@@ -89,7 +93,7 @@ install(
 
 install(
   TARGETS cluster_node_py
-  LIBRARY DESTINATION lib/${PROJECT_NAME}/python3.${Python3_VERSION_MAJOR}
+  LIBRARY DESTINATION lib/python3.${Python3_VERSION_MINOR}/site-packages
 )
 
 if(BUILD_TESTING)
