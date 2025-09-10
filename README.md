@@ -28,24 +28,10 @@ This framework can tolerate fail-stop failures equal to the cluster size minus t
 Supported distributions
 | OS           | Distribution                                  | Foros branch |
 | ------------ | --------------------------------------------- | ------------ |
-| Ubuntu 20.04 | [galactic](https://docs.ros.org/en/galactic/) | galactic     |
-| Ubuntu 22.04 | [humble](https://docs.ros.org/en/humble/)     | humble       |
-
+| Ubuntu 20.04 | [galactic](https://docs.ros.org/en/jazzy/) | jazzy     |
 
 
 ## Install Foros
-### Option 1. Install Official Packages
-for galactic
-```bash
-sudo apt install ros-galactic-foros ros-galactic-foros-examples ros-galactic-foros-inspector
-```
-
-for humble
-```bash
-sudo apt install ros-humble-foros ros-humble-foros-examples ros-humble-foros-inspector
-```
-
-### Option 2. Build From Source
 
 Install dependencies
 
@@ -56,7 +42,7 @@ Build
 > If you want to install to existing ROS2 workspace, please clone this source in the workspace in advance.
 
 ```bash
-. /opt/ros/galactic/setup.bash
+. /opt/ros/jazzy/setup.bash
 colcon build
 ```
 
