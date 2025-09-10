@@ -15,8 +15,9 @@ find_package(std_msgs REQUIRED)
 find_package(std_srvs REQUIRED)
 find_package(foros_msgs REQUIRED)
 find_package(leveldb REQUIRED)
-find_package(Python3 COMPONENTS Interpreter Development REQUIRED)
-find_package(pybind11 REQUIRED)
+
+set(CMAKE_THREAD_PREFER_PTHREAD ON)
+find_package(Threads REQUIRED)
 
 include_directories(src)
 
@@ -47,7 +48,8 @@ add_library(${PROJECT_NAME} SHARED ${${PROJECT_NAME}_SRCS})
 target_include_directories(${PROJECT_NAME}
   PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-    $<INSTALL_INTERFACE:include>)
+    $<INSTALL_INTERFACE:include>
+)
 
 ament_target_dependencies(${PROJECT_NAME}
   rclcpp
@@ -55,46 +57,31 @@ ament_target_dependencies(${PROJECT_NAME}
   std_msgs
   std_srvs
   leveldb
+  Threads
 )
 
-pybind11_add_module(cluster_node_py
-  python_bindings/cluster_node_py.cpp
+target_link_libraries(${PROJECT_NAME}
+  leveldb
+  Threads::Threads
 )
-
-target_include_directories(cluster_node_py
-  PRIVATE
-    ${CMAKE_CURRENT_SOURCE_DIR}/include
-)
-
-target_link_libraries(cluster_node_py
-  PRIVATE ${PROJECT_NAME}
-)
-
-# why shoud I put it as well?? need to check
-target_link_libraries(${PROJECT_NAME} leveldb)
 
 ament_export_include_directories(include)
-ament_export_libraries(${PROJECT_NAME})
-ament_export_targets(${PROJECT_NAME})
-ament_export_dependencies(rclcpp foros_msgs leveldb)
 
-install(
-  DIRECTORY include/
-  DESTINATION include
+install(FILES
+  include/akit/failover/foros/cluster_node.hpp
+  include/akit/failover/foros/cluster_node_options.hpp
+  DESTINATION include/akit/failover/foros
 )
 
-install(
-  TARGETS ${PROJECT_NAME}
-  EXPORT ${PROJECT_NAME}
+install(TARGETS ${PROJECT_NAME}
+  EXPORT export_${PROJECT_NAME}
   ARCHIVE DESTINATION lib
   LIBRARY DESTINATION lib
   RUNTIME DESTINATION bin
 )
 
-install(
-  TARGETS cluster_node_py
-  LIBRARY DESTINATION lib/python3.${Python3_VERSION_MINOR}/site-packages
-)
+ament_export_targets(export_${PROJECT_NAME} HAS_LIBRARY_TARGET)
+ament_export_dependencies(rclcpp foros_msgs leveldb Threads)
 
 if(BUILD_TESTING)
   find_package(ament_cmake_cpplint REQUIRED)
